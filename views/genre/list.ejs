@@ -1,0 +1,18 @@
+<!--List genre-->
+<div class="row">
+    <h1><%= title %></h1>
+
+    <div class="list-group list-group-flush">
+        <% if(genres.length > 0) { %>
+            <% genres.forEach(genre => { %>
+                <a href="<%= genre.url %>" class="list-group-item list-group-item-action">
+                    <h6 class="text-primary"><%= genre.name %></h6>
+                </a>
+            <% }); %>
+        <% }else { %>
+            <p>There are no genres.</p>
+        <% } %>
+    </div>
+
+</div>
+<!-- End List genre -->

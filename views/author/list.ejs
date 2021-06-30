@@ -1,0 +1,19 @@
+<!--List author-->
+<div class="row">
+    <h1><%= title %></h1>
+
+    <div class="list-group list-group-flush">
+        <% if(authors.length > 0) { %>
+            <% authors.forEach(author => { %>
+                <a href="<%= author.url %>" class="list-group-item list-group-item-action">
+                    <h6 class="text-primary"><%= author.name %></h6>
+                    <span><%= author.lifespan %></span>
+                </a>
+            <% }); %>
+        <% }else { %>
+            <p>There are no authors.</p>
+        <% } %>
+    </div>
+
+</div>
+<!-- End List author -->

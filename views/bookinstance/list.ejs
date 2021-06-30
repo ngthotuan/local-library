@@ -1,0 +1,33 @@
+<!--List Book instance-->
+<div class="row">
+    <h1><%= title %></h1>
+
+    <div class="list-group list-group-flush">
+        <% if(bookinstances.length > 0) { %>
+            <% bookinstances.forEach(instance => { %>
+                <a href="<%= instance.url %>" class="list-group-item list-group-item-action">
+                    <h6 class="text-primary"><%= instance.book.title %></h6>
+                    <div><%= instance.imprint %></div>
+                    <div>
+                        <%
+                            const colorType = {
+                                Available: 'success',
+                                Maintenance: 'warning',
+                                Loaned: 'danger',
+                                Reserved: 'danger'
+                            }
+                        %>
+                        <span class="text-<%= colorType[instance.status] %>"><%= instance.status %></span>
+                        <% if(instance.status !== 'Available') { %>
+                            <i>(Due : <%= instance.due_back_formatted %>)</i>
+                        <% } %>
+                    </div>
+                </a>
+            <% }); %>
+        <% }else { %>
+            <p>There are no book instances.</p>
+        <% } %>
+    </div>
+
+</div>
+<!-- End List Book instance -->

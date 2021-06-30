@@ -1,0 +1,19 @@
+<!--List Book-->
+<div class="row">
+    <h1><%= title %></h1>
+
+    <div class="list-group list-group-flush">
+        <% if(books.length > 0) { %>
+            <% books.sort((b1, b2) => b1.title.localeCompare(b2.title)).forEach(book => { %>
+                <a href="<%= book.url %>" class="list-group-item list-group-item-action">
+                    <h6 class="text-primary"><%= book.title %></h6>
+                    <div><i>Author: </i> <%= book.author.name %></div>
+                </a>
+            <% }); %>
+        <% }else { %>
+            <p>There are no books.</p>
+        <% } %>
+    </div>
+
+</div>
+<!-- End List Book -->
