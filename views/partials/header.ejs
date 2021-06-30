@@ -1,21 +1,42 @@
 <!--Header-->
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">LOCAL LIBRARY</a>
+        <a class="navbar-brand" href="/catalog">LOCAL LIBRARY</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
                 aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Book</a>
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="#">Book</a>-->
+<!--                </li>-->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Book</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/catalog/books">All books</a></li>
+                        <li><a class="dropdown-item" href="/catalog/book/create">Create new book</a></li>
+                    </ul>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</a>
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Author</a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Item 1</a></li>
-                        <li><a class="dropdown-item" href="#">Item 2</a></li>
+                        <li><a class="dropdown-item" href="/catalog/authors">All authors</a></li>
+                        <li><a class="dropdown-item" href="/catalog/author/create">Create new author</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Genre</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/catalog/genres">All genres</a></li>
+                        <li><a class="dropdown-item" href="/catalog/genre/create">Create new genre</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Book instance</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/catalog/bookinstances">All book instance</a></li>
+                        <li><a class="dropdown-item" href="/catalog/bookinstance/create">Create new book instance</a></li>
                     </ul>
                 </li>
             </ul>
