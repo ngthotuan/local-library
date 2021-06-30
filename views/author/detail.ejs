@@ -1,0 +1,28 @@
+<!--List author-->
+<div class="row">
+    <div class="card">
+        <div class="card-header">
+            <h1 ><%= title %></h1>
+            <%= author.lifespan %>
+        </div>
+        <div class="card-body">
+            <div class="mt-4 mx-3">
+                <h5>Books:</h5>
+                    <% if(books.length > 0) { %>
+                        <% books.forEach(book => { %>
+                            <ul class="list-group list-group">
+                                <li class="list-group-item">
+                                    <a class="text-primary" href="<%= book.url %>"><%= book.title %></a>
+                                    <p><%= book.summary %></p>
+                                </li>
+                            </ul>
+                        <% }); %>
+                    <% }else { %>
+                        <p>This author has no books.</p>
+                    <% } %>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- End List author -->

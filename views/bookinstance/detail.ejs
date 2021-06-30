@@ -1,0 +1,31 @@
+<!--List Book-->
+<div class="row">
+    <div class="card">
+        <h1 class="card-header">ID: <%= bookinstance._id %></h1>
+        <div class="card-body">
+            <%
+                const colorType = {
+                    Available: 'success',
+                    Maintenance: 'warning',
+                    Loaned: 'danger',
+                    Reserved: 'danger'
+                }
+            %>
+            <div class="mt-4">
+                <b>Title: </b><a href="<%= bookinstance.book.url %>"><%= bookinstance.book.title %></a>
+            </div>
+            <div class="mt-4">
+                <b>Imprint: </b><%= bookinstance.imprint %>
+            </div>
+            <div class="mt-4">
+                <b>Status: </b>
+                <span class="text-<%= colorType[bookinstance.status] %>"><%= bookinstance.status %></span>
+            </div>
+            <% if(bookinstance.status !== 'Available') { %>
+                <div class="mt-4"><b>Due back: </b><%= bookinstance.due_back_formatted %></div>
+            <% } %>
+        </div>
+    </div>
+
+</div>
+<!-- End List Book -->

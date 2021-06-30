@@ -1,4 +1,6 @@
+const {Error} = require('mongoose');
 const Author = require('../models/author');
+const Book = require('../models/book');
 
 // Display list of all Authors.
 exports.author_list = async function(req, res, next) {
@@ -11,10 +13,33 @@ exports.author_list = async function(req, res, next) {
 };
 
 // Display detail page for a specific Author.
-exports.author_detail = function(req, res) {
-    res.send('NOT IMPLEMENTED: Author detail: ' + req.params.id);
-};
+exports.author_detail = async function (req, res, next) {
+    try {
+      const authorId = req.params.id;
+      const [author, books] = await Promise.all([
+          Author.findById(authorId),
+          Book.find({author: authorId})
+      ])
+      if (author) {
+        res.render('author/detail', { title: author.name, author, books});
+      } else {
+        const err = new Error('author not found');
+        err.status = 404;
+        throw err;
+      }
+    } catch (err) {
 
+      if (err instanceof Error.CastError) {
+        console.log('else2')
+
+        console.log(req.params.id)
+        err.message = 'author not found';
+        err.status = 404;
+      }
+      next(err);
+    }
+  };
+  
 // Display Author create form on GET.
 exports.author_create_get = function(req, res) {
     res.send('NOT IMPLEMENTED: Author create GET');
