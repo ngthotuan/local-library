@@ -1,0 +1,27 @@
+<!-- Create Genre -->
+<div class="row">
+  <h1><%= title %></h1>
+
+  <form method="post">
+    <div class="mb-3">
+      <label for="name" class="form-label">Genre name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="name"
+        name="name"
+        placeholder="Fantasy, Poetry etc."
+        value="<%= typeof genre !== 'undefined' ? genre.name : '' %>"
+        required
+      />
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+
+  <ul class="mx-5">
+    <% if(typeof errors !== 'undefined') { %> <% errors.forEach(item => { %>
+    <li class="text-danger"><%= item.msg %></li>
+    <% }) %> <% } %>
+  </ul>
+</div>
+<!-- End Create Genre -->

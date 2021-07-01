@@ -1,0 +1,58 @@
+<!-- Create author -->
+<div class="row">
+  <h1><%= title %></h1>
+  <form method="post">
+    <div class="mb-3">
+      <label for="firstName" class="form-label">First name:</label>
+      <input
+        type="text"
+        class="form-control"
+        id="firstName"
+        name="firstName"
+        placeholder="First name"
+        value="<%= typeof author !== 'undefined' ? author.first_name : '' %>"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="lastName" class="form-label">Last name:</label>
+      <input
+        type="text"
+        class="form-control"
+        id="lastName"
+        name="lastName"
+        placeholder="Last name"
+        value="<%= typeof author !== 'undefined' ? author.family_name : '' %>"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="dob" class="form-label">Date of birth:</label>
+      <input
+        type="date"
+        class="form-control"
+        id="dob"
+        name="dob"
+        value="<%= typeof author !== 'undefined' ? author.date_of_birth_yyyy_mm_dd : '' %>"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="dod" class="form-label">Date of death:</label>
+      <input
+        type="date"
+        class="form-control"
+        id="dod"
+        name="dod"
+        value="<%= typeof author !== 'undefined' ? author.date_of_death_yyyy_mm_dd : '' %>"
+      />
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+
+  <ul class="mx-5">
+    <% if(typeof errors !== 'undefined') { %> <% errors.forEach(item => { %>
+    <li class="text-danger"><%= item.msg %></li>
+    <% }) %> <% } %>
+  </ul>
+</div>
+<!-- End Create author -->

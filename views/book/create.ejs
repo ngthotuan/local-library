@@ -1,0 +1,74 @@
+<!-- Create Book -->
+<div class="row">
+  <h1><%= title %></h1>
+  <form method="post">
+    <div class="mb-3">
+      <label for="title" class="form-label">Title:</label>
+      <input
+        type="text"
+        class="form-control"
+        id="title"
+        name="title"
+        placeholder="Title of book"
+        value="<%= typeof book !== 'undefined' ? book.title : '' %>"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="author" class="form-label">Author:</label>
+      <select id="author" name="author" class="form-select">
+        <% authors.sort((a1, a2) => a1.name.localeCompare(a2.name)).forEach(author => { %>
+          <option value="<%= author._id %>"><%= author.name %></option>
+        <% }); %>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="summary" class="form-label">Summary:</label>
+      <input
+        type="text"
+        class="form-control"
+        id="summary"
+        name="summary"
+        placeholder="Summary"
+        value="<%= typeof book !== 'undefined' ? book.summary : '' %>"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="isbn" class="form-label">ISBN:</label>
+      <input
+        type="text"
+        class="form-control"
+        name="isbn"
+        id="isbn"
+        placeholder="ISBN12"
+        value="<%= typeof book !== 'undefined' ? book.isbn : '' %>"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="genre" class="form-label">Genre:</label> <br />
+      <% genres.forEach(genre => { %>
+        <div class="form-check form-check-inline">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="genre"
+            id="<%= genre._id %>"
+            value="<%= genre._id %>"
+            <%= typeof book !== 'undefined' ? book.genre.includes(genre._id) ? 'checked' : '' : '' %>
+          />
+          <label class="form-check-label" for="<%= genre._id %>"><%= genre.name %></label>
+        </div>
+      <% }); %>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+
+  <ul class="mx-5">
+    <% if(typeof errors !== 'undefined') { %> <% errors.forEach(item => { %>
+    <li class="text-danger"><%= item.msg %></li>
+    <% }) %> <% } %>
+  </ul>
+</div>
+<!-- End Create Book -->

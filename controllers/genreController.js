@@ -1,6 +1,7 @@
 const { Error } = require('mongoose');
 const Genre = require('../models/genre');
 const Book = require('../models/book');
+const { body, validationResult } = require('express-validator');
 
 // Display list of all Genre.
 exports.genre_list = async function (req, res, next) {
@@ -29,8 +30,8 @@ exports.genre_detail = async function (req, res, next) {
     }
   } catch (err) {
     if (err instanceof Error.CastError) {
-        err.message = 'Genre not found';
-        err.status = 404;
+      err.message = 'Genre not found';
+      err.status = 404;
     }
     next(err);
   }
@@ -38,13 +39,44 @@ exports.genre_detail = async function (req, res, next) {
 
 // Display Genre create form on GET.
 exports.genre_create_get = function (req, res) {
-  res.send('NOT IMPLEMENTED: Genre create GET');
+  res.render('genre/create', { title: 'Create Genre' });
 };
 
 // Handle Genre create on POST.
-exports.genre_create_post = function (req, res) {
-  res.send('NOT IMPLEMENTED: Genre create POST');
-};
+exports.genre_create_post = [
+  body('name')
+    .trim()
+    .isLength({ min: 3 })
+    .withMessage('Genre name at least 3 characters')
+    .escape(),
+  async function (req, res, next) {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+    // Create a genre object with escaped and trimmed data.
+    const { name } = req.body;
+    const genre = new Genre({ name });
+    if (!errors.isEmpty()) {
+      // There are errors. Render the form again with sanitized values/error messages.
+      res.render('genre/create', {
+        title: 'Create Genre',
+        genre: genre,
+        errors: errors.array(),
+      });
+    } else {
+      try {
+        const existGenre = await Genre.findOne({ name });
+        if (existGenre) {
+          res.redirect(existGenre.url);
+        } else {
+          await genre.save();
+          res.redirect(genre.url);
+        }
+      } catch (err) {
+        next(err);
+      }
+    }
+  },
+];
 
 // Display Genre delete form on GET.
 exports.genre_delete_get = function (req, res) {

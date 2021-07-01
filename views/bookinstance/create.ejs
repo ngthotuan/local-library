@@ -1,0 +1,54 @@
+<!-- Create Book instance -->
+<div class="row">
+  <h1><%= title %></h1>
+  <form method="post">
+    <div class="mb-3">
+      <label for="book" class="form-label">Book:</label>
+      <select id="book" name="book" class="form-select">
+        <% books.sort((b1, b2) => b1.title.localeCompare(b2.title)).forEach(book => { %>
+          <option value="<%= book._id %>"><%= book.title %></option>
+        <% }); %>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="imprint" class="form-label">Imprint:</label>
+      <input
+        type="text"
+        class="form-control"
+        id="imprint"
+        name="imprint"
+        placeholder="Publisher and date information"
+        value="<%= typeof bookinstance !== 'undefined' ? bookinstance.imprint : '' %>"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="dueBack" class="form-label">Date when book available: </label>
+      <input
+        type="date"
+        class="form-control"
+        id="dueBack"
+        name="dueBack"
+        value="<%= typeof bookinstance !== 'undefined' ? bookinstance.dueBack : '' %>"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="status" class="form-label">Status:</label>
+      <select id="status" name="status" class="form-select">
+        <option value='Maintenance'>Maintenance</option>
+        <option value='Available'>Available</option>
+        <option value='Loaned'>Loaned</option>
+        <option value='Reserved'>Reserved</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+
+  <ul class="mx-5">
+    <% if(typeof errors !== 'undefined') { %> <% errors.forEach(item => { %>
+    <li class="text-danger"><%= item.msg %></li>
+    <% }) %> <% } %>
+  </ul>
+</div>
+<!-- End Create Book instance-->
