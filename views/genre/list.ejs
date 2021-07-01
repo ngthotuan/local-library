@@ -4,7 +4,7 @@
 
     <div class="mx-3 list-group list-group-flush">
         <% if(genres.length > 0) { %>
-            <% genres.forEach(genre => { %>
+            <% genres.sort((g1, g2) => g1.name.localeCompare(g2.name)).forEach(genre => { %>
                 <a href="<%= genre.url %>" class="list-group-item list-group-item-action">
                     <h6 class="text-primary"><%= genre.name %></h6>
                 </a>

@@ -4,7 +4,7 @@
 
     <div class="mx-3 list-group list-group-flush">
         <% if(bookinstances.length > 0) { %>
-            <% bookinstances.forEach(instance => { %>
+            <% bookinstances.sort((b1, b2) => b1.book.title.localeCompare(b2.book.title)).forEach(instance => { %>
                 <a href="<%= instance.url %>" class="list-group-item list-group-item-action">
                     <h6 class="text-primary"><%= instance.book.title %></h6>
                     <div><%= instance.imprint %></div>

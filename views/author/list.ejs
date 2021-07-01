@@ -4,7 +4,7 @@
 
     <div class="mx-3 list-group list-group-flush">
         <% if(authors.length > 0) { %>
-            <% authors.forEach(author => { %>
+            <% authors.sort((a1, a2) => a1.name.localeCompare(a2.name)).forEach(author => { %>
                 <a href="<%= author.url %>" class="list-group-item list-group-item-action">
                     <h6 class="text-primary"><%= author.name %></h6>
                     <span><%= author.lifespan %></span>
