@@ -1,7 +1,7 @@
 const BookInstance = require('../models/bookinstance');
 const Book = require('../models/book');
 const { body, validationResult } = require('express-validator');
-const book = require('../models/book');
+const { Error } = require('mongoose');
 
 // Display list of all BookInstances.
 exports.bookinstance_list = async function (req, res, next) {
@@ -24,7 +24,7 @@ exports.bookinstance_detail = async function (req, res, next) {
     );
     if (bookinstance) {
       res.render('bookinstance/detail', {
-        title: bookinstance.book.name,
+        title: 'Book instance ' + bookinstance.book.title,
         bookinstance,
       });
     } else {
@@ -90,13 +90,40 @@ exports.bookinstance_create_post = [
 ];
 
 // Display BookInstance delete form on GET.
-exports.bookinstance_delete_get = function (req, res) {
-  res.send('NOT IMPLEMENTED: BookInstance delete GET');
+exports.bookinstance_delete_get = async function (req, res, next) {
+  try {
+    const bookinstance = await BookInstance.findById(req.params.id).populate(
+      'book'
+    );
+    if (bookinstance) {
+      res.render('bookinstance/delete', {
+        title: 'Delete book instance ' + bookinstance.book.title,
+        bookinstance,
+      });
+    } else {
+      res.redirect('/catalog/bookinstances');
+    }
+  } catch (err) {
+    if (err instanceof Error.CastError) {
+      err.message = 'Book instance not found';
+      err.status = 404;
+    }
+    next(err);
+  }
 };
 
 // Handle BookInstance delete on POST.
-exports.bookinstance_delete_post = function (req, res) {
-  res.send('NOT IMPLEMENTED: BookInstance delete POST');
+exports.bookinstance_delete_post = async function (req, res, next) {
+  try {
+    await BookInstance.findByIdAndRemove(req.body.bookInstanceId);
+    res.redirect('/catalog/bookinstances');
+  } catch (err) {
+    if (err instanceof Error.CastError) {
+      err.message = 'Book instance not found';
+      err.status = 404;
+    }
+    next(err);
+  }
 };
 
 // Display BookInstance update form on GET.

@@ -1,7 +1,12 @@
-<!--List Book-->
+<!--Detail Book-->
 <div class="row">
     <div class="card">
-        <h1 class="card-header">Title: <%= title %></h1>
+        <div class="card-header">
+            <h1 >Title: <%= book.title %></h1>
+            <a class="btn btn-primary" href="<%= book.url %>/update">Update book</a>
+            <a class="btn btn-danger" href="<%= book.url %>/delete">Delete book</a>
+        </div>
+        
         <div class="card-body">
             <div class="mt-4">
                 <h5>Author: <a href="<%= book.author.url %>"><%= book.author.name %></a></h5>
@@ -51,4 +56,4 @@
       </div>
 
 </div>
-<!-- End List Book -->
+<!-- End Detail Book -->

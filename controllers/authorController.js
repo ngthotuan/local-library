@@ -22,7 +22,7 @@ exports.author_detail = async function (req, res, next) {
       Book.find({ author: authorId }),
     ]);
     if (author) {
-      res.render('author/detail', { title: author.name, author, books });
+      res.render('author/detail', { title: 'Author Detail: ' + author.name, author, books });
     } else {
       const err = new Error('author not found');
       err.status = 404;
@@ -97,13 +97,52 @@ exports.author_create_post = [
 ];
 
 // Display Author delete form on GET.
-exports.author_delete_get = function (req, res) {
-  res.send('NOT IMPLEMENTED: Author delete GET');
+exports.author_delete_get = async function (req, res, next) {
+  try {
+    const [author, books] = await Promise.all([
+      Author.findById(req.params.id),
+      Book.find({ author: req.params.id }),
+    ]);
+    if (!author) {
+      res.redirect('/catalog/authors');
+    } else {
+      res.render('author/delete', {
+        title: 'Delete Author: ' + author.name,
+        author,
+        books,
+      });
+    }
+  } catch (err) {
+    if (err instanceof Error.CastError) {
+      err.message = 'Author not found';
+      err.status = 404;
+    }
+    next(err);
+  }
 };
 
 // Handle Author delete on POST.
-exports.author_delete_post = function (req, res) {
-  res.send('NOT IMPLEMENTED: Author delete POST');
+exports.author_delete_post = async function (req, res, next) {
+  try {
+    const [author, books] = await Promise.all([
+      Author.findById(req.body.authorId),
+      Book.find({ author: req.body.authorId }),
+    ]);
+    if (books.length > 0) {
+      // Author has books. Render in same way as for GET route.
+      res.render('author/delete', {
+        title: 'Delete Author',
+        author,
+        books,
+      });
+    } else {
+      // Author has no books. Delete object and redirect to the list of authors.
+      await Author.findByIdAndRemove(req.body.authorId);
+      res.redirect('/catalog/authors');
+    }
+  } catch (err) {
+    next(err);
+  }
 };
 
 // Display Author update form on GET.

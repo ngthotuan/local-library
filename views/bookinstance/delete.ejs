@@ -1,12 +1,17 @@
-<!--Detail book instance-->
+<!--Delete Book instance-->
 <div class="row">
     <div class="card">
         <div class="card-header">
-            <h1>ID: <%= bookinstance._id %></h1>
+            <h1>Delete book instance ID: <%= bookinstance._id %></h1>
             <a class="btn btn-primary" href="<%= bookinstance.url %>/update">Update book instance</a>
-            <a class="btn btn-danger" href="<%= bookinstance.url %>/delete">Delete book instance</a>
           </div>
+        
         <div class="card-body">
+            <b class="text-danger">Do you really want to delete this Book Instance?</b>
+            <form action="" method="post">
+              <input type="hidden" name="bookInstanceId" value="<%= bookinstance._id %>" />
+              <button class="btn btn-danger" type="submit">Delete</button>
+            </form>
             <%
                 const colorType = {
                     Available: 'success',
@@ -30,6 +35,5 @@
             <% } %>
         </div>
     </div>
-
 </div>
-<!-- End Detail book instance -->
+<!-- End Delete Book instance -->

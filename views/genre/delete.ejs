@@ -1,15 +1,17 @@
-<!-- Genre detail -->
+<!-- Genre delete -->
 <div class="row">
     <div class="card">
         <div class="card-header">
-            <h1>Genre: <%= genre.name %></h1>
+            <h1>Delete Genre: <%= genre.name %></h1>
             <a class="btn btn-primary" href="<%= genre.url %>/update">Update genre</a>
-            <a class="btn btn-danger" href="<%= genre.url %>/delete">Delete genre</a>
           </div>
         <div class="card-body">
+            <% if(books.length > 0) { %>
+                <b class="text-danger">Delete the following books before attempting to delete this genre.</b>
+                <% } %>
             <div class="mx-3 list-group list-group-flush">
-                <h4>List books</h4>
                 <% if(books.length > 0) { %>
+                    <h4>List books</h4>
                     <% books.forEach(book => { %>
                         <a href="<%= book.url %>" class="list-group-item list-group-item-action">
                             <h6 class="text-primary"><%= book.title %></h6>
@@ -17,11 +19,15 @@
                         </a>
                     <% }); %>
                 <% }else { %>
-                    <p>There are no books.</p>
+                    <b>Do you really want to delete this Genre ?</b>
+                    <form action="" method="post">
+                    <input type="hidden" name="genreId" value="<%= genre._id %>" />
+                    <button class="btn btn-danger" type="submit">Delete</button>
+                    </form>
                 <% } %>
             </div>
         </div>
     </div>
 
 </div>
-<!-- End Genre detail -->
+<!-- End Genre delete -->

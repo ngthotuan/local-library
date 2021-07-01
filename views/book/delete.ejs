@@ -1,0 +1,62 @@
+<!-- Delete Book-->
+<div class="row">
+  <div class="card">
+    <div class="card-header">
+      <h1>Delete book: <%= book.title %></h1>
+      <a class="btn btn-primary" href="<%= book.url %>/update">Update book</a>
+    </div>
+
+    <div class="card-body">
+      <div class="mt-4">
+        <h5>
+          Author: <a href="<%= book.author.url %>"><%= book.author.name %></a>
+        </h5>
+      </div>
+      <div class="mt-4">
+        <h5>Summary</h5>
+        <p><%= book.summary %></p>
+      </div>
+      <div class="mt-4">
+        <h5>ISBN: <span class="card-text"><%= book.isbn %></span></h5>
+      </div>
+      <div class="mt-4">
+        <h5>
+          Genre: <% book.genre.forEach(g => { %>
+          <a href="<%= g.url %>"><%= g.name %></a>, <% })%>
+        </h5>
+      </div>
+      <% if(bookinstances.length > 0) { %>
+        <b class="text-danger">Delete the following copies before attempting to delete this Book.</b>
+        <% } %>
+      <div class="mt-4 mx-3">
+        <% if(bookinstances.length > 0) { %>
+          <h5>Copies:</h5>
+        <% bookinstances.forEach(instance => { %>
+        <ul class="list-group list-group-flush">
+          <% const colorType = { Available: 'success', Maintenance: 'warning',
+          Loaned: 'danger', Reserved: 'danger' } %>
+          <li class="list-group-item">
+            <div class="text-<%= colorType[instance.status] %>">
+              <%= instance.status %>
+            </div>
+            <div><b>Imprint: </b><%= instance.imprint %></div>
+            <div>
+              <b>Id: </b><a href="<%= instance.url %>"><%= instance._id %></a>
+            </div>
+            <% if(instance.status !== 'Available') { %>
+            <div><b>Due back: </b><%= instance.due_back_formatted %></div>
+            <% } %>
+          </li>
+        </ul>
+        <% }); %> <% } else { %>
+          <b class="text-danger">Do you really want to delete this Book?</b>
+          <form action="" method="post">
+            <input type="hidden" name="bookId" value="<%= book._id %>" />
+            <button class="btn btn-danger" type="submit">Delete</button>
+          </form>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Delete Book -->

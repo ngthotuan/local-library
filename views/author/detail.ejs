@@ -1,9 +1,11 @@
-<!--List author-->
+<!--Detail author-->
 <div class="row">
     <div class="card">
         <div class="card-header">
             <h1 ><%= title %></h1>
-            <%= author.lifespan %>
+            <%= author.lifespan %> <br>
+            <a class="btn btn-primary" href="<%= author.url %>/update">Update author</a>
+            <a class="btn btn-danger" href="<%= author.url %>/delete">Delete author</a>
         </div>
         <div class="card-body">
             <div class="mt-4 mx-3">
@@ -23,6 +25,5 @@
             </div>
         </div>
     </div>
-
 </div>
-<!-- End List author -->
+<!-- End Detail author -->

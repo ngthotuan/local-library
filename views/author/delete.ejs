@@ -1,0 +1,36 @@
+<!--Delete author-->
+<div class="row">
+  <div class="card">
+    <div class="card-header">
+      <h1>Delete Author: <%= author.name %></h1>
+      <%= author.lifespan %><br>
+      <a class="btn btn-primary" href="<%= author.url %>/update">Update author</a>
+    </div>
+    <div class="card-body">
+      <div class="mt-4 mx-3">
+        <% if(books.length > 0) { %>
+        <b class="text-danger">
+          Delete the following books before attempting to delete this author.
+        </b>
+        <% } %> <% if(books.length > 0) { %>
+        <h5>Books:</h5>
+
+        <% books.forEach(book => { %>
+        <ul class="list-group list-group">
+          <li class="list-group-item">
+            <a class="text-primary" href="<%= book.url %>"><%= book.title %></a>
+            <p><%= book.summary %></p>
+          </li>
+        </ul>
+        <% }); %> <% }else { %>
+        <b class="text-danger">Do you really want to delete this Author?.</b>
+        <form action="" method="post">
+          <input type="hidden" name="authorId" value="<%= author._id %>" />
+          <button class="btn btn-danger" type="submit">Delete</button>
+        </form>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Delete author -->

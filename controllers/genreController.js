@@ -22,7 +22,7 @@ exports.genre_detail = async function (req, res, next) {
       Book.find({ genre: genreId }),
     ]);
     if (genre) {
-      res.render('genre/detail', { title: 'Genre Detail', genre, books });
+      res.render('genre/detail', { title: 'Genre Detail: ' + genre.name, genre, books });
     } else {
       const err = new Error('Genre not found');
       err.status = 404;
@@ -79,13 +79,47 @@ exports.genre_create_post = [
 ];
 
 // Display Genre delete form on GET.
-exports.genre_delete_get = function (req, res) {
-  res.send('NOT IMPLEMENTED: Genre delete GET');
+exports.genre_delete_get = async function (req, res, next) {
+  try {
+    const genreId = req.params.id;
+    const [genre, books] = await Promise.all([
+      Genre.findById(genreId),
+      Book.find({ genre: genreId }),
+    ]);
+    if (genre) {
+      res.render('genre/delete', { title: 'Delete Genre ' + genre.name, genre, books });
+    } else {
+      res.redirect('/catalog/genres');
+    }
+  } catch (err) {
+    if (err instanceof Error.CastError) {
+      err.message = 'Genre not found';
+      err.status = 404;
+    }
+    next(err);
+  }
 };
-
 // Handle Genre delete on POST.
-exports.genre_delete_post = function (req, res) {
-  res.send('NOT IMPLEMENTED: Genre delete POST');
+exports.genre_delete_post = async function (req, res, next) {
+  try {
+    const genreId = req.body.genreId;
+    const [genre, books] = await Promise.all([
+      Genre.findById(genreId),
+      Book.find({ genre: genreId }),
+    ]);
+    if (books.length > 0) {
+      res.render('genre/detail', { title: 'Delete Genre ' + genre.name, genre, books });
+    } else {
+      await Genre.findByIdAndRemove(genreId);
+      res.redirect('/catalog/genres');
+    }
+  } catch (err) {
+    if (err instanceof Error.CastError) {
+      err.message = 'Genre not found';
+      err.status = 404;
+    }
+    next(err);
+  }
 };
 
 // Display Genre update form on GET.

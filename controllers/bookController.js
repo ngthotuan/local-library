@@ -47,7 +47,7 @@ exports.book_detail = async function (req, res, next) {
       BookInstance.find({ book: bookId }),
     ]);
     if (book) {
-      res.render('book/detail', { title: book.title, book, bookinstances });
+      res.render('book/detail', { title: 'Book ' + book.title, book, bookinstances });
     } else {
       const err = new Error('Book not found');
       err.status = 404;
@@ -139,13 +139,48 @@ exports.book_create_post = [
 ];
 
 // Display book delete form on GET.
-exports.book_delete_get = function (req, res) {
-  res.send('NOT IMPLEMENTED: Book delete GET');
+exports.book_delete_get = async function (req, res, next) {
+  try {
+    const bookId = req.params.id;
+    const [book, bookinstances] = await Promise.all([
+      Book.findById(bookId).populate('author genre'),
+      BookInstance.find({ book: bookId }),
+    ]);
+    if (book) {
+      res.render('book/delete', { title: 'Delete book: ' + book.title, book, bookinstances });
+    } else {
+      res.redirect('/catalog/books');
+    }
+  } catch (err) {
+    if (err instanceof Error.CastError) {
+      err.message = 'Book not found';
+      err.status = 404;
+    }
+    next(err);
+  }
 };
 
 // Handle book delete on POST.
-exports.book_delete_post = function (req, res) {
-  res.send('NOT IMPLEMENTED: Book delete POST');
+exports.book_delete_post = async function (req, res, next) {
+  try {
+    const bookId = req.body.bookId;
+    const [book, bookinstances] = await Promise.all([
+      Book.findById(bookId).populate('author genre'),
+      BookInstance.find({ book: bookId }),
+    ]);
+    if (bookinstances.length > 0) {
+      res.render('book/delete', { title: book.title, book, bookinstances });
+    } else {
+      await Book.findByIdAndRemove(bookId);
+      res.redirect('/catalog/books');
+    }
+  } catch (err) {
+    if (err instanceof Error.CastError) {
+      err.message = 'Book not found';
+      err.status = 404;
+    }
+    next(err);
+  }
 };
 
 // Display book update form on GET.
