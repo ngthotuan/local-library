@@ -29,17 +29,17 @@
         class="form-control"
         id="dueBack"
         name="dueBack"
-        value="<%= typeof bookinstance !== 'undefined' ? bookinstance.dueBack : '' %>"
+        value="<%= typeof bookinstance !== 'undefined' ? bookinstance.due_back_yyyy_mm_dd : '' %>"
         required
       />
     </div>
     <div class="mb-3">
       <label for="status" class="form-label">Status:</label>
       <select id="status" name="status" class="form-select">
-        <option value='Maintenance'>Maintenance</option>
-        <option value='Available'>Available</option>
-        <option value='Loaned'>Loaned</option>
-        <option value='Reserved'>Reserved</option>
+        <option <%= typeof bookinstance === 'undefined' ? '' : bookinstance.status == 'Maintenance' ? 'selected' : '' %> value='Maintenance'>Maintenance</option>
+        <option <%= typeof bookinstance === 'undefined' ? '' : bookinstance.status == 'Available' ? 'selected' : '' %> value='Available'>Available</option>
+        <option <%= typeof bookinstance === 'undefined' ? '' : bookinstance.status == 'Loaned' ? 'selected' : '' %> value='Loaned'>Loaned</option>
+        <option <%= typeof bookinstance === 'undefined' ? '' : bookinstance.status == 'Reserved' ? 'selected' : '' %> value='Reserved'>Reserved</option>
       </select>
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>

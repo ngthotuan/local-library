@@ -22,7 +22,11 @@ exports.author_detail = async function (req, res, next) {
       Book.find({ author: authorId }),
     ]);
     if (author) {
-      res.render('author/detail', { title: 'Author Detail: ' + author.name, author, books });
+      res.render('author/detail', {
+        title: 'Author Detail: ' + author.name,
+        author,
+        books,
+      });
     } else {
       const err = new Error('author not found');
       err.status = 404;
@@ -146,11 +150,71 @@ exports.author_delete_post = async function (req, res, next) {
 };
 
 // Display Author update form on GET.
-exports.author_update_get = function (req, res) {
-  res.send('NOT IMPLEMENTED: Author update GET');
+exports.author_update_get = async function (req, res, next) {
+  try {
+    const author = await Author.findById(req.params.id);
+    if (author) {
+      res.render('author/create', {
+        title: 'Update Author',
+        author,
+      });
+    } else {
+      const error = new Error('Author not found');
+      error.status = 404;
+      throw error;
+    }
+  } catch (err) {
+    next(err);
+  }
 };
-
 // Handle Author update on POST.
-exports.author_update_post = function (req, res) {
-  res.send('NOT IMPLEMENTED: Author update POST');
-};
+exports.author_update_post = [
+  // Validate and sanitize fields.
+  body('firstName')
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage('First name must be specified.'),
+  body('lastName')
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage('Family name must be specified.'),
+  body('dob', 'Invalid date of birth')
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .toDate(),
+  body('dod', 'Invalid date of death')
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .toDate(),
+
+  async function (req, res, next) {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+    // Create a genre object with escaped and trimmed data.
+    const { firstName, lastName, dob, dod } = req.body;
+    const author = new Author({
+      _id: req.params.id,
+      first_name: firstName,
+      family_name: lastName,
+      date_of_birth: dob,
+      date_of_death: dod,
+    });
+    if (!errors.isEmpty()) {
+      // There are errors. Render the form again with sanitized values/error messages.
+      res.render('author/create', {
+        title: 'Update Author',
+        author,
+        errors: errors.array(),
+      });
+    } else {
+      try {
+        await Author.findByIdAndUpdate(req.params.id, author);
+        res.redirect(author.url);
+      } catch (err) {
+        next(err);
+      }
+    }
+  },
+];

@@ -18,7 +18,7 @@
       <label for="author" class="form-label">Author:</label>
       <select id="author" name="author" class="form-select">
         <% authors.sort((a1, a2) => a1.name.localeCompare(a2.name)).forEach(author => { %>
-          <option value="<%= author._id %>"><%= author.name %></option>
+          <option <%= typeof book === 'undefined' ? '' : book.author.toString() == author._id.toString() ? 'selected' : '' %> value="<%= author._id %>"><%= author.name %></option>
         <% }); %>
       </select>
     </div>
