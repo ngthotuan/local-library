@@ -34,9 +34,6 @@ exports.author_detail = async function (req, res, next) {
     }
   } catch (err) {
     if (err instanceof Error.CastError) {
-      console.log('else2');
-
-      console.log(req.params.id);
       err.message = 'author not found';
       err.status = 404;
     }

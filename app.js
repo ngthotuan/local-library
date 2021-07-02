@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const config = require('./config');
 const routes = require('./routes');
+const helmet = require('helmet');
 
 const app = express();
 config.connectDB().then();
@@ -21,7 +22,7 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use('/assets/', express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
-
+app.use(helmet());
 // Route app
 routes(app);
 
