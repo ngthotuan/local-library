@@ -53,13 +53,7 @@ app.use(passport.session());
 // Pass isAuthenticated and current_user to all views.
 app.use(function (req, res, next) {
   res.locals.isAuthenticated = req.isAuthenticated();
-  // Delete salt and hash fields from req.user object before passing it.
-  const safeUser = req.user;
-  if (safeUser) {
-    delete safeUser._doc.salt;
-    delete safeUser._doc.hash;
-  }
-  res.locals.user = safeUser;
+  res.locals.user = req.user;
   next();
 });
 

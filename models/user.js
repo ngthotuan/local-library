@@ -1,41 +1,40 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
 
 const UserSchema = new Schema({
-  username: {type: String, required: true},
-  fullname: {type: String, required: true},
+  username: { type: String, required: true },
+  fullname: { type: String, required: true },
   role: {
     type: Number,
     enum: [
       0, // Regular user: read-only access
       1, // Editor: read, create and update access
-      2 // Admin: read, create, update, delete access
+      2, // Admin: read, create, update, delete access
     ],
-    default: 0
+    default: 0,
   },
-  email: {type: String, required: true},
-  salt: {type: String, required: true},
-  hash: {type: String, required: true}
+  email: { type: String, required: true },
+  password: { type: String, required: true },
 });
 
 // Virtual for User's URL.
-UserSchema.virtual('url').get(function() {
-  return '/users/' + this._id;
+UserSchema.virtual('url').get(function () {
+  return '/user/' + this._id;
 });
 
 // Instance method for hashing user-typed password.
-UserSchema.methods.setPassword = function(password) {
-  // Create a salt for the user.
-  this.salt = crypto.randomBytes(16).toString('hex');
-  // Use salt to create hashed password.
-  this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 128, 'sha512').toString('hex');
+UserSchema.methods.setPassword = function (password) {
+  // Hash password
+  const salt = bcrypt.genSaltSync(10);
+  const hash = bcrypt.hashSync(password, salt);
+  this.password = hash;
 };
 
 // Instance method for comparing user-typed password against hashed-password on db.
-UserSchema.methods.validatePassword = function(password) {
-  const hash = crypto.pbkdf2Sync(password, this.salt, 10000, 128, 'sha512').toString('hex');
-  return this.hash === hash;
+UserSchema.methods.validatePassword = function (password) {
+  // Match password
+  return bcrypt.compareSync(password, this.password);
 };
 
 // Export model
