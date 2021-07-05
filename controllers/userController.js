@@ -1,4 +1,6 @@
 const { body, validationResult } = require('express-validator');
+const passport = require('passport');
+
 const User = require('../models/user');
 const {
   constants: { UserRole },
@@ -10,9 +12,17 @@ exports.user_profile = function (req, res, next) {
 };
 
 // Display login form on GET.
-exports.login_get = function (req, res, next) {
-  res.send('NOT IMPLEMENT GET /user/login');
-};
+exports.login_get = [
+  isAlreadyLoggedIn,
+
+  function (req, res, next) {
+    const messages = extractFlashMessages(req);
+    res.render('user/login', {
+      title: 'Login',
+      messages,
+    });
+  },
+];
 
 // Display warning page on GET.
 exports.warning = function (req, res, next) {
@@ -20,19 +30,32 @@ exports.warning = function (req, res, next) {
 };
 
 // Handle login form on POST
-exports.login_post = function (req, res, next) {
-  res.send('NOT IMPLEMENT POST /user/login');
-};
+exports.login_post = [
+  passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/user/login',
+    failureFlash: true,
+  }),
+];
 
 // Handle logout on GET.
-exports.logout_get = function (req, res, next) {
-  res.send('NOT IMPLEMENT GET /user/logout');
-};
+exports.logout_get = [
+  function (req, res, next) {
+    req.logout();
+    req.session.destroy((err) => {
+      res.redirect('/');
+    });
+  },
+];
 
 // Display register form on GET.
-exports.register_get = function (req, res, next) {
-  res.render('user/register', { title: 'Register', UserRole });
-};
+exports.register_get = [
+  isAlreadyLoggedIn,
+
+  function (req, res, next) {
+    res.render('user/register', { title: 'Register', UserRole });
+  },
+];
 
 // Handle register on POST.
 exports.register_post = [
@@ -54,7 +77,7 @@ exports.register_post = [
     .isLength({ min: 1 })
     .trim()
     .toInt()
-    .isIn(UserRole.map(role => role.value)),
+    .isIn(UserRole.map((role) => role.value)),
   body('password', 'Password must be between 4-32 characters long.')
     .isLength({ min: 4, max: 32 })
     .trim(),
@@ -91,6 +114,8 @@ exports.register_post = [
     } else {
       user.setPassword(req.body.password);
       await user.save();
+      // User saved. Redirect to login page.
+      req.flash('success', 'Successfully registered. You can log in now!');
       res.redirect('/user/login');
     }
   },
@@ -119,4 +144,47 @@ exports.reset_post_final = function (req, res, next) {
   res.send('NOT IMPLEMENT  POST 2 /user/reset ');
 };
 
-// router.get('/stop', userController.warning);
+// -- Helper functions, no need to export. -- //
+
+// Extract flash messages from req.flash and return an array of messages.
+function extractFlashMessages(req) {
+  const messages = [];
+  // Check if flash messages was sent. If so, populate them.
+  const errorFlash = req.flash('error');
+  const successFlash = req.flash('success');
+
+  // Look for error flash.
+  if (errorFlash && errorFlash.length)
+    messages.push({ type: 'error', msg: errorFlash[0] });
+
+  // Look for success flash.
+  if (successFlash && successFlash.length)
+    messages.push({ type: 'success', msg: successFlash[0] });
+  return messages;
+}
+
+// Function to prevent user who already logged in from
+// accessing login and register routes.
+function isAlreadyLoggedIn(req, res, next) {
+  if (req.user && req.isAuthenticated()) {
+    res.redirect('/');
+  } else {
+    next();
+  }
+}
+
+// Function that confirms that user is logged in and is the 'owner' of the page.
+function isPageOwnedByUser(req, res, next) {
+  if (req.user && req.isAuthenticated()) {
+    if (req.user._id.toString() === req.params.id.toString()) {
+      // User's own page. Allow request.
+      next();
+    } else {
+      // Deny and redirect.
+      res.redirect('/');
+    }
+  } else {
+    // Not authenticated. Redirect.
+    res.redirect('/');
+  }
+}

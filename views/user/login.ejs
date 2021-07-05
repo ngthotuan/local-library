@@ -1,0 +1,35 @@
+<!-- Login -->
+<div class="row">
+  <h1>Login</h1>
+  <form method="POST" action="">
+    <% messages.forEach(message => { %>
+      <p class="alert <%= message.type === 'success' ? 'alert-success' : 'alert-danger' %>"><%= message.msg %></p>
+    <% }) %>
+    <div class="form-group mb-3">
+      <label for="username">Username:</label
+      ><input
+        class="form-control"
+        id="username"
+        type="text"
+        placeholder="Enter your username"
+        name="username"
+        required
+        value=""
+      />
+    </div>
+    <div class="form-group mb-3">
+      <label for="password">Password:</label
+      ><input
+        class="form-control"
+        id="password"
+        type="password"
+        name="password"
+        placeholder="Enter your password"
+        required
+      />
+    </div>
+    <button class="btn btn-primary" type="submit">Submit</button>
+  </form>
+  <br /><a href="/user/reset">Forgot your password?</a><br /><br />
+</div>
+<!-- Login -->
