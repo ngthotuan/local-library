@@ -40,6 +40,20 @@
                     </ul>
                 </li>
             </ul>
+            <% if( typeof locals.user === 'undefined') {%>
+                <a href="/user/login">
+                    <button class="btn btn-outline-primary mr-3">Log In</button>
+                </a>
+                <a href="/user/register">
+                    <button class="btn btn-outline-success">Register</button>
+                </a>
+
+            <% } else { %>
+                <button class="btn btn-outline-light disabled">Hi, <%= user.name %></button>
+                <a href="/user/logout">
+                    <button class="btn btn-outline-success">Logout</button>
+                </a>
+            <% }%>
         </div>
     </div>
 </nav>

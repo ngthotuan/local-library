@@ -38,10 +38,5 @@ UserSchema.methods.validatePassword = function(password) {
   return this.hash === hash;
 };
 
-// Instance method for comparing user-typed passwords against each other.
-UserSchema.methods.passwordsMatch = function(password, passwordConfirm) {
-  return password === passwordConfirm;
-};
-
 // Export model
 module.exports = mongoose.model('User', UserSchema);
