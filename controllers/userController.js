@@ -7,9 +7,29 @@ const {
 } = require('../config');
 
 // Display detail page for a specific user.
-exports.user_profile = function (req, res, next) {
-  res.send('NOT IMPLEMENT GET /user/:id' + req.params.id);
-};
+exports.user_profile = [
+  isPageOwnedByUser,
+
+  async function (req, res, next) {
+    try {
+      const user = await User.findById(req.params.id);
+      if (user) {
+        // Successful, so render
+        res.render('user/profile', {
+          title: 'User Profile',
+          user,
+          UserRole,
+        });
+      } else {
+        let err = new Error('User not found');
+        err.status = 404;
+        return next(err);
+      }
+    } catch (err) {
+      next(err);
+    }
+  },
+];
 
 // Display login form on GET.
 exports.login_get = [
@@ -122,13 +142,102 @@ exports.register_post = [
 ];
 
 // Display update form on GET.
-exports.update_get = function (req, res, next) {
-  res.send('NOT IMPLEMENT GET /user/update ' + req.params.id);
-};
+exports.update_get = [
+  isPageOwnedByUser,
+
+  async function (req, res, next) {
+    try {
+      const user = await User.findById(req.params.id);
+      if (user) {
+        // Successful, so render
+        res.render('user/update', {
+          title: 'User update information',
+          user,
+          UserRole,
+        });
+      } else {
+        let err = new Error('User not found');
+        err.status = 404;
+        return next(err);
+      }
+    } catch (err) {
+      next(err);
+    }
+  },
+];
 // Handle update on POST.
-exports.update_post = function (req, res, next) {
-  res.send('NOT IMPLEMENT POST /user/update ' + req.params.id);
-};
+exports.update_post = [
+  // Validate fields.
+  body('username', 'Username must be at least 3 characters long.')
+    .isLength({ min: 3 })
+    .trim()
+    .custom(async (username, { req }) => {
+      if (username !== req.user.username) {
+        const user = await User.findOne({ username });
+        if (user) {
+          return Promise.reject(
+            `Username ${username} already taken. Choose another one.`
+          );
+        }
+      }
+    }),
+  body('fullname', 'Full name must be at least 3 characters long.')
+    .isLength({ min: 3 })
+    .trim(),
+  body('email', 'Please enter a valid email address.').isEmail().trim(),
+  body('role', 'A role must be selected for the user.')
+    .isLength({ min: 1 })
+    .trim()
+    .toInt()
+    .isIn(UserRole.map((role) => role.value)),
+  body('password', 'Password must be between 4-32 characters long.')
+    .optional({ checkFalsy: true })
+    .isLength({ min: 4, max: 32 })
+    .trim(),
+  body('password_confirm')
+    .trim()
+    .custom((value, { req }) => {
+      if (req.body.password && value !== req.body.password) {
+        throw new Error('Password confirmation does not match password');
+      }
+      return true;
+    }),
+  // Sanitize fields with wildcard operator.
+  body('*').trim().escape(),
+  // Process request after validation and sanitization.
+  async function (req, res, next) {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+
+    // Create a user object with escaped and trimmed data and the old _id!
+    const user = new User({
+      username: req.body.username,
+      fullname: req.body.fullname,
+      email: req.body.email,
+      role: req.body.role,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      res.render('user/update', {
+        title: 'User update info',
+        user,
+        UserRole,
+        errors: errors.array(),
+      });
+    } else {
+      if (req.body.password) {
+        user.setPassword(req.body.password);
+      }
+      try {
+        await User.findByIdAndUpdate(req.params.id, user);
+        res.redirect(user.url);
+      } catch (err) {
+        next(err);
+      }
+    }
+  },
+];
 
 // Display reset password form on GET.
 exports.reset_get = function (req, res, next) {

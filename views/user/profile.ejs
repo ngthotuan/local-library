@@ -1,0 +1,19 @@
+<!-- Profile -->
+<div class="row">
+    <h1>Profile</h1>
+    <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><%= user.fullname %></h5>
+          <p class="card-text">Username: <%= user.username %></p>
+          <p class="card-text">E-mail: <%= user.email %></p>
+          <% UserRole.forEach(role => { %>
+            <% if(role.value === user.role){%>
+                <p class="card-text">Role: <%= role.name %></p>
+            <% } %>
+          <% })%>
+          <a href="<%= user.url %>/update" class="btn btn-primary">Update information</a>
+        </div>
+      </div>
+  </div>
+  <!-- Profile -->
+  

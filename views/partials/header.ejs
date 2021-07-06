@@ -41,7 +41,7 @@
                 </li>
             </ul>
             <% if(isAuthenticated) {%>
-                <button class="btn btn-outline-light disabled">Hi, <%= user.fullname %></button>
+                <a class="btn btn-outline-light" href="<%= user.url %>">Hi, <%= user.fullname %></a>
                 <a href="/user/logout">
                     <button class="btn btn-outline-success">Logout</button>
                 </a>
