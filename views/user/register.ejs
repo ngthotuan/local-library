@@ -1,0 +1,91 @@
+<!-- Register -->
+<div class="row">
+  <h1>Create User</h1>
+  <form method="POST" action="">
+    <div class="form-group mb-3">
+      <label for="username">Username:</label
+      ><input
+        class="form-control"
+        id="username"
+        type="text"
+        placeholder="Enter your username"
+        name="username"
+        required
+        value="<%= typeof user !== 'undefined' ? user.username : ''%>"
+      />
+    </div>
+    <div class="form-group mb-3">
+      <label for="fullname">Full Name:</label
+      ><input
+        class="form-control"
+        id="fullname"
+        type="text"
+        placeholder="Enter your full name"
+        name="fullname"
+        required
+        value="<%= typeof user !== 'undefined' ? user.fullname : ''%>"
+      />
+    </div>
+    <div class="form-group mb-3">
+      <label for="email">E-mail:</label
+      ><input
+        class="form-control"
+        id="email"
+        type="email"
+        placeholder="Enter your email address"
+        name="email"
+        required
+        value="<%= typeof user !== 'undefined' ? user.email : ''%>"
+      />
+    </div>
+    <div class="form-group mb-3">
+      <label for="role">User Role:</label
+      ><select
+        class="form-select"
+        id="role"
+        type="select"
+        placeholder="Select role"
+        name="role"
+        required
+      >
+        <% UserRole.forEach(role => { %>
+          <option 
+            value="<%= role.value %>"
+            <%= typeof user !== 'undefined' ? user.role == role.value ? 'selected' : '' : '' %>
+          ><%= role.name %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="form-group mb-3">
+      <label for="password">Password:</label
+      ><input
+        class="form-control"
+        id="password"
+        type="password"
+        name="password"
+        placeholder="Enter your password"
+        required
+        value="<%= typeof user !== 'undefined' ? user.password : ''%>"
+      />
+    </div>
+    <div class="form-group mb-3">
+      <label for="password_confirm">Confirm Password:</label
+      ><input
+        class="form-control"
+        id="password_confirm"
+        type="password"
+        name="password_confirm"
+        placeholder="Enter your password again..."
+        required
+        value="<%= typeof user !== 'undefined' ? user.password_confirm : ''%>"
+      />
+    </div>
+    <ul class="mx-5">
+      <% if(typeof errors !== 'undefined') { %> <% errors.forEach(item => { %>
+      <li class="text-danger"><%= item.msg %></li>
+      <% }) %> <% } %>
+    </ul>
+    <button class="btn btn-primary" type="submit">Submit</button>
+  </form>
+</div>
+<!-- End Register -->
