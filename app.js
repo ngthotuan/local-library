@@ -57,6 +57,9 @@ app.use(function (req, res, next) {
   next();
 });
 
+// authorization middleware
+app.use(config.authorization);
+
 // Route app
 routes(app);
 

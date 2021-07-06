@@ -36,7 +36,7 @@ router.post('/reset', userController.reset_post);
 router.post('/resetfinal', userController.reset_post_final);
 
 // // GET request for User permission reminder page.
-// router.get('/stop', userController.warning);
+router.get('/stop', userController.warning);
 
 // GET request for a specific User.
 router.get('/:id', userController.user_profile);

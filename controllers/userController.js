@@ -46,7 +46,11 @@ exports.login_get = [
 
 // Display warning page on GET.
 exports.warning = function (req, res, next) {
-  res.send('NOT IMPLEMENT GET /user/stop');
+  const messages = extractFlashMessages(req);
+  res.render('user/warning', {
+    title: 'Sorry!',
+    messages,
+  });
 };
 
 // Handle login form on POST

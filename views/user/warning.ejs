@@ -1,0 +1,9 @@
+<!-- Warning -->
+<div class="row">
+    <h1>Warning</h1>
+      <% messages.forEach(message => { %>
+        <p class="alert <%= message.type === 'success' ? 'alert-success' : 'alert-danger' %>"><%= message.msg %></p>
+      <% }) %>
+  </div>
+  <!-- Warning -->
+  
